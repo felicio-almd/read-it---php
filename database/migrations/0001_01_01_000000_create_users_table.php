@@ -14,9 +14,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table): void {
-            $table->id()->generatedAs();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('username')->unique();
+            $table->string('avatar')->nullable();
+            $table->text('bio')->nullable();
+            $table->integer('karma')->default(0);
             $table->timestampTz('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -24,14 +28,15 @@ return new class extends Migration
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table): void {
-            $table->string('email')->primary();
+            $table->uuid('id')->primary();
+            $table->string('email')->index();
             $table->string('token');
             $table->timestampTz('created_at')->nullable();
         });
 
         Schema::create('sessions', function (Blueprint $table): void {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
