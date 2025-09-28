@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Users\Tables;
 
+use App\Enums\UserRole;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -30,6 +31,12 @@ final class UsersTable
                 TextColumn::make('karma')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('role')
+                    ->badge()
+                    ->color(fn (UserRole $state): string => match ($state) {
+                        UserRole::Admin => 'success',
+                        UserRole::User => 'gray',
+                    }),
                 TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('karma')->default(0);
             $table->timestampTz('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['admin', 'user'])->default('user');
             $table->rememberToken();
             $table->timestampsTz();
         });

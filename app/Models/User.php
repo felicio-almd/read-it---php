@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -40,6 +41,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         'avatar',
         'bio',
         'karma',
+        'role',
     ];
 
     /**
@@ -54,7 +56,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->role === UserRole::Admin;
     }
 
     public function getFilamentAvatarUrl(): ?string
@@ -117,6 +119,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
         ];
     }
 }

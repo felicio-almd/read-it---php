@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
+use App\Enums\UserRole;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -31,6 +33,9 @@ final class UserForm
                     ->required()
                     ->numeric()
                     ->default(0),
+                Select::make('role')
+                    ->options(UserRole::class)
+                    ->required(),
                 TextInput::make('password')
                     ->password()
                     ->required(),

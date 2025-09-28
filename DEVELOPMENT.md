@@ -140,6 +140,8 @@ Fiz a geração do resource do filament padrão para economizar tempo na parte d
 com espaços corretos.
 Nessa parte usei IA pontualmente só para confirmar o que podia ser o erro que tive de não aparecer na sidebar os recursos, mas descobri a solução a partir do discord do 3 pontos usando `composer du`.
 
+Criei niveis de acesso para usuários fazerem login na plataforma e no admin so poder acessador quem tiver permissão avançada, pra isso mudei um pouco a lógica no model de User mas basicamente retringi o acesso ao painel e criei novos campos no painel admin.
+
 ## Funcionalidades Avançadas
 
 1.  Sistema de Karma
