@@ -123,6 +123,23 @@ DB_PASSWORD=
 Mesmo localmente escolhi trabalhar com o postgres para garantir que
 estaria trabalhando com a mesma database que iria para o container
 
+## Para começar o projeto
+
+### Localmente
+
+Se baseando que o usuário tenha node, php e composer instalados em sua máquina. Além disso deve ter todas extensões para usar php com filament e postgresql.
+entre elas: php8.3-xml php8.3-intl php8.3-mbstring php8.3-curl php8.3-bcmath php8.3-gd php8.3-pgsql php8.3-zip php8.3-cli php8.3-common php8.3-intl php8.3-bcmath php8.3-ctype php8.3-fileinfo php8.3-tokenizer php8.3-json php8.3-exif
+
+Comece usando o `composer install` para instalar as dependencias do PHP e `npm install` para instalar as dependencias do front
+
+Para rodar o projeto, use o comando `composer run dev`
+
+### Docker
+
+Fiz a geração do resource do filament padrão para economizar tempo na parte do admin, defini relações básicas e consertei alguns input que não vinham
+com espaços corretos.
+Nessa parte usei IA pontualmente só para confirmar o que podia ser o erro que tive de não aparecer na sidebar os recursos, mas descobri a solução a partir do discord do 3 pontos usando `composer du`.
+
 ## Funcionalidades Avançadas
 
 1.  Sistema de Karma
