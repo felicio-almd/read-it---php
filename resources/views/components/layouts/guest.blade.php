@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 ?>
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-50">
     <head>
@@ -23,8 +24,8 @@ declare(strict_types=1);
         <x-navbar />
 
         <!-- Content -->
-        <h1 class="text-4xl">Teste2</h1>
         {{ $slot }}
     </body>
 </html>
-<?php 
+
+<?php
