@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 use App\Models\Post;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 final class PostController extends Controller
@@ -51,6 +51,27 @@ final class PostController extends Controller
         }
 
         return view('components.post', ['post' => $post]);
+    }
+
+    /**
+     * Armazena um novo comentário no banco de dados.
+     */
+    public function addComment(Request $request, Post $post)
+    {
+        $validated = $request->validate([
+            'content' => ['required', 'string', 'max:5000'],
+            'parent_id' => ['nullable', 'exists:comments,id'],
+        ]);
+
+        $post->comments()->create([
+            'content' => $validated['content'],
+            'user_id' => auth()->id(),
+            'parent_id' => $validated['parent_id'] ?? null,
+        ]);
+
+        // ja incrementa no banco pela função feita na model
+
+        return back()->with('success', 'Seu comentário foi publicado!');
     }
 
     /**

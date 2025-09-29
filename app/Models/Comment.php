@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -54,6 +55,32 @@ final class Comment extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    /**
+     * Retorna todos os "ancestrais" (pais, avós, etc.) de um comentário.
+     *
+     * @return Collection
+     */
+    public function getAncestors()
+    {
+        // Pega o caminho (ex: "id1.id2.id3") e transforma em um array de IDs
+        $parentIds = explode('.', (string) $this->path);
+
+        // Remove o ID do próprio comentário do final do array
+        array_pop($parentIds);
+
+        // Se não houver IDs de pais, retorna uma coleção vazia
+        if ($parentIds === []) {
+            return collect();
+        }
+
+        // Busca todos os comentários cujos IDs estão na lista de pais
+        // e os ordena pela profundidade (depth) para manter a hierarquia
+        return self::query()
+            ->whereIn('id', $parentIds)
+            ->orderBy('depth')
+            ->get();
     }
 
     // Threading

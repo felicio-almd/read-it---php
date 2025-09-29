@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function (): void {
 
     // posts
     Route::get('/posts/{id}', [PostController::class, 'show'])->name('post.show');
+    Route::post('/posts/{post}/comments', [PostController::class, 'addComment'])->name('post.comments.add');
 });
 
 require __DIR__.'/auth.php';

@@ -159,6 +159,8 @@ A "mágica" do depth e path (que foi a abordagem que usei) acontece automaticame
 
 A partir da abordagem dos comentários, utilizei o relation manager do filament para mostrar os comentários em cada post, fazendo a tabela de criação por usuário, então no model também coloquei o incremento da contagem da comentários em cada post.
 
+Para trabalhar com o aninhamento de comentários, usei uma função simples no controller, prefiro usar essas funções no controller do que utilizar action para elas. Pra home fiz só uma action mesmo.
+
 ## Funcionalidades Avançadas
 
 1.  Sistema de Karma
