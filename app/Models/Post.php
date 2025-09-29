@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class Post extends Model
 {
@@ -46,9 +47,13 @@ final class Post extends Model
         return $this->belongsTo(Subreddit::class);
     }
 
-    //    public function comments(): HasMany
-    //    {
-    //        return $this->hasMany(Comment::class);
-    //    }
+    /**
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     //    public function votes(): MorphMany;
 }

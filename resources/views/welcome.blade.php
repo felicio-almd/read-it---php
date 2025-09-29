@@ -14,7 +14,7 @@ declare(strict_types=1);
                 @forelse ($posts as $post)
                     <article class="mb-4 rounded-lg bg-white p-4 shadow">
                         <div class="text-xs text-gray-500">
-                            <a href="#" class="font-bold text-gray-800 hover:underline">
+                            <a href="" class="font-bold text-gray-800 hover:underline">
                                 r/{{ $post->subreddit->name }}
                             </a>
                             <span class="mx-1">•</span>
@@ -27,7 +27,7 @@ declare(strict_types=1);
 
                         <!-- Título -->
                         <h2 class="mt-2 text-xl font-bold">
-                            <a href="#">{{ $post->title }}</a>
+                            <a href="{{ route('post.show', $post->id) }}">{{ $post->title }}</a>
                         </h2>
 
                         <p class="mt-2 text-gray-700">

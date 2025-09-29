@@ -1,11 +1,7 @@
 # Annotations
 
-Inicialmente comecei fazendo a modelagem dos dados com ajuda do Claude
-para confirmar se não estava esquecendo de algum requisito. Preparei um
-documento de ata de requisitos para o projeto, esclareci a visão geral,
-os requisitos funcionais e não funcionais. A partir disso
-preparei a modelagem de dados e o diagrama de tabelas que utilizaria
-para ter todos os dados, esclarecendo as relações entre tabelas.
+Inicialmente comecei fazendo a modelagem dos dados e a leitura do projeto em geral para fazer um mapeamento de requisitos.
+Após isso, com ajuda do claude confirmei se não estava esquecendo de algum requisito nas partes de features que não conhecia(como o sistema de hierarquia, como eu poderia fazer). Preparei um documento de ata de requisitos para o projeto que facilita o meu passo a passo no desenvolvimento e posso fazer checklists das coisas que preciso implementar e até coisas que posso deixar em segundo plano para serem desenvolvidas depois do principal de verdade estar pronto, esclareci a visão geral, os requisitos funcionais e não funcionais e a arquitetura do projeto. A partir disso preparei a modelagem de dados e o diagrama de tabelas que utilizaria para ter todos os dados, esclarecendo as relações entre tabelas.
 
 ### Stack: PHP 8.3+, Laravel 12, FilamentPHP 4, Blade + Tailwind v4
 
@@ -19,7 +15,7 @@ para ter todos os dados, esclarecendo as relações entre tabelas.
 
 Replicar estrutura básica de um fórum de discussão Permitir exploração
 de subreddits (comunidades temáticas) Suportar publicação de conteúdo em
-Markdown Implementar sistema de comentários hierárquicos Criar sistema
+Markdown Implementar sistema de comentários hierárquicos. Criar sistema
 de votação (upvote/downvote) Fornecer painel administrativo completo
 
 ## 2. Requisitos Funcionais
@@ -36,16 +32,22 @@ de votação (upvote/downvote) Fornecer painel administrativo completo
 ### Entidades Principais
 
 1. Users (Usuários)
-2. 4.1.2 Subreddits (Comunidades)
-3. 4.1.3 Posts
-4. 4.1.4 Comments (Comentários)
-5. 4.1.5 Votes (Sistema de Votação)
-6. 4.1.6 Memberships (Membros do Subreddit)
+2. Subreddits (Comunidades)
+3. Posts
+4. Comments (Comentários)
+5. Votes (Sistema de Votação)
+6. Memberships (Membros do Subreddit)
 
 ### Relacionamentos
 
-Para o banco de dados e a modelagem usei o dbdiagram para saber das
-tabelas https://dbdiagram.io/d/read-it-68d6a5b3d2b621e42215d6d2
+Para o banco de dados e a modelagem usei o dbdiagram para saber das tabelas
+
+https://dbdiagram.io/d/read-it-68d6a5b3d2b621e42215d6d2
+
+Para implementar os comentários hierárquicos no meu app (da tabela de comments), optei pela estratégia de Materialized Path.
+Nela, cada comentário guarda o caminho completo até ele (por exemplo: 1/5/9), o que me permite recuperar facilmente toda a árvore de respostas de um comentário usando consultas simples, como LIKE '1/5/%', então posso retornar na ordem que preciso para minha view dos posts. Essa abordagem eu nunca havia colocado em prática mas conhecia, com ajuda de vídeos e IA consegui implementar.
+
+Escolhi essa abordagem porque ela é simples de implementar, deixa as consultas rápidas e facilita a exibição das threads. A principal desvantagem é que mover um comentário para outro lugar exige atualizar seus descendentes, mas no meu caso isso não é um problema, já que os comentários não mudam de posição depois de criados.
 
 - User Relationships
   User → Posts: 1:N (Um usuário pode ter muitos posts)
@@ -108,6 +110,10 @@ Optei pela tabela membership como pivo para ter acesso fácil aos membros e os s
 └─────────────────┘
 ```
 
+## Segunda Fase - Desenvolvimento
+
+### Aqui digo as decisões tomadas em fase de desenvolvimento
+
 Para configurar o ambiente, na .env faça a troca do SQLITE para postgres
 Configuração do ambiente
 
@@ -136,11 +142,20 @@ Para rodar o projeto, use o comando `composer run dev`
 
 ### Docker
 
-Fiz a geração do resource do filament padrão para economizar tempo na parte do admin, defini relações básicas e consertei alguns input que não vinham
-com espaços corretos.
-Nessa parte usei IA pontualmente só para confirmar o que podia ser o erro que tive de não aparecer na sidebar os recursos, mas descobri a solução a partir do discord do 3 pontos usando `composer du`.
+### Em Segundo plano
 
-Criei niveis de acesso para usuários fazerem login na plataforma e no admin so poder acessador quem tiver permissão avançada, pra isso mudei um pouco a lógica no model de User mas basicamente retringi o acesso ao painel e criei novos campos no painel admin.
+Fiz a geração do resource do filament padrão para economizar tempo na parte do admin, defini relações básicas e consertei alguns input que não vinham com espaços corretos. Nessa parte usei IA pontualmente só para confirmar o que podia ser o erro que tive de não aparecer na sidebar os recursos, mas descobri a solução a partir do discord do 3 pontos usando `composer du`.
+
+Biblioteca de Mídia: Para lidar com uploads de imagens (avatares de usuário, imagens de posts), com ajuda do Gemini optei por usar o pacote spatie/laravel-medialibrary. Ele oferece uma solução que podia usar coleções e conversões de imagem, e se integra bem com o Filament.
+
+Criei niveis de acesso para usuários fazerem login na plataforma e no admin so poder acessador quem tiver permissão avançada, pra isso mudei um pouco a lógica no model de User mas basicamente retringi o acesso ao painel e criei novos campos no painel admin. Utilizei o breeze para login dos usuários no site em si, sem ter acesso ao painel.
+
+Factories e Seeders:
+Desenvolvi factories para os models User, Subreddit e Post para permitir a semear o banco de dados com dados de teste.
+
+### Funcionalidade: a Lógica de Threading
+
+A "mágica" do depth e path (que foi a abordagem que usei) acontece automaticamente quando um comentário for criado. A lógica foi usada diretamente no model
 
 ## Funcionalidades Avançadas
 
