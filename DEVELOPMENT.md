@@ -161,6 +161,10 @@ A partir da abordagem dos comentários, utilizei o relation manager do filament 
 
 Para trabalhar com o aninhamento de comentários, usei uma função simples no controller, prefiro usar essas funções no controller do que utilizar action para elas. Pra home fiz só uma action mesmo.
 
+### Funcionalidade: Lógica de votação (Likes e Deslikes)
+
+Para ter likes e deslikes nos posts e nos comentários, implementei um sistema de votos criando o model Vote com relacionamento polimórfico para suportar Post e Comment. Usei a trait Votable com o morphMany para centralizar a lógica e adicionei métodos vote(), upvote() que chamei de like e downvote() que chamei de deslike.
+
 ## Funcionalidades Avançadas
 
 1.  Sistema de Karma

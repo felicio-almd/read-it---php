@@ -22,7 +22,7 @@ final class SubredditResource extends Resource
 {
     protected static ?string $model = Subreddit::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHashtag;
 
     // protected static ?string $recordTitleAttribute = 'Subreddit';
 

@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Votable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 final class Post extends Model
 {
     use HasFactory;
     use HasUuids;
+    use Votable;
 
     protected $fillable = [
         'title',
@@ -23,9 +26,17 @@ final class Post extends Model
         'image_path',
         'user_id',
         'subreddit_id',
+        'upvotes',
+        'downvotes',
+        'score',
         'is_pinned',
         'is_locked',
     ];
+
+    //    public function getRouteKeyName(): string
+    //    {
+    //        return 'slug';
+    //    }
 
     /**
      * @return BelongsTo<User, $this>
@@ -51,5 +62,32 @@ final class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    //    public function votes(): MorphMany;
+    /**
+     * @return MorphMany<Vote, $this>
+     */
+    public function votes(): MorphMany
+    {
+        return $this->morphMany(Vote::class, 'votable');
+    }
+
+    public function getCurrentUserVote(): ?string
+    {
+        if (! auth()->check()) {
+            return null;
+        }
+
+        return $this->votes()
+            ->where('user_id', auth()->id())
+            ->value('vote_type');
+    }
+
+    protected function getScoreAttribute(): int
+    {
+        return $this->upvotes()->count() - $this->downvotes()->count();
+    }
+
+    protected function getCommentCountAttribute(): int
+    {
+        return $this->comments()->count();
+    }
 }

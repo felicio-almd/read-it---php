@@ -24,16 +24,6 @@ declare(strict_types=1);
         <x-navbar />
 
         <!-- Main Content Layout -->
-        <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <div class="flex items-start gap-8">
-                <!-- Sidebar -->
-                <x-sidebar />
-
-                <!-- Feed (Page Specific Content) -->
-                <main class="flex-grow">
-                    {{ $slot }}
-                </main>
-            </div>
-        </div>
+        {{ $slot }}
     </body>
 </html>

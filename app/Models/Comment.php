@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Votable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 final class Comment extends Model
 {
     use HasFactory;
     use HasUuids;
+    use Votable;
 
     protected $fillable = [
         'content',
@@ -31,6 +34,14 @@ final class Comment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return MorphMany<Vote, $this>
+     */
+    public function votes(): MorphMany
+    {
+        return $this->morphMany(Vote::class, 'votable');
     }
 
     /**
@@ -83,6 +94,22 @@ final class Comment extends Model
             ->get();
     }
 
+    public function getCurrentUserVote(): ?string
+    {
+        if (! auth()->check()) {
+            return null;
+        }
+
+        return $this->votes()
+            ->where('user_id', auth()->id())
+            ->value('vote_type');
+    }
+
+    protected function getScoreAttribute(): int
+    {
+        return $this->upvotes()->count() - $this->downvotes()->count();
+    }
+
     // Threading
     protected static function booted(): void
     {
@@ -118,10 +145,5 @@ final class Comment extends Model
             // Decrementa contador no Post
             $comment->post()->decrement('comment_count');
         });
-    }
-
-    protected function casts(): array
-    {
-        return [];
     }
 }

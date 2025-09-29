@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('votes', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->string('votable_id');
-            $table->string('votable_type');
+            $table->uuidMorphs('votable');
             $table->enum('vote_type', ['up', 'down']);
             $table->timestamps();
         });

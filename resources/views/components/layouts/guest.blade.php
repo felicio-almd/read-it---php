@@ -23,7 +23,6 @@ declare(strict_types=1);
         <!-- Top Nav -->
         <x-navbar />
 
-        <!-- Content -->
         {{ $slot }}
     </body>
 </html>
