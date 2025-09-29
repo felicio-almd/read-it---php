@@ -41,7 +41,7 @@ final class Comment extends Model
     }
 
     /**
-     * @return BelongsTo<\App\Models\Comment, $this>
+     * @return BelongsTo<Comment, $this>
      */
     public function parent(): BelongsTo
     {
@@ -49,7 +49,7 @@ final class Comment extends Model
     }
 
     /**
-     * @return HasMany<\App\Models\Comment, $this>
+     * @return HasMany<Comment, $this>
      */
     public function children(): HasMany
     {
@@ -63,7 +63,7 @@ final class Comment extends Model
         self::creating(function (Comment $comment): void {
             if ($comment->parent_id) {
                 // Se for uma resposta, busca o pai
-                $parent = \App\Models\Comment::query()->find($comment->parent_id);
+                $parent = Comment::query()->find($comment->parent_id);
                 if ($parent) {
                     // A profundidade é a do pai + 1
                     $comment->depth = $parent->depth + 1;
@@ -83,8 +83,16 @@ final class Comment extends Model
             // Substitui o placeholder {ID} pelo ID real que acabou de ser gerado
             $comment->path = str_replace('{ID}', $comment->id, $comment->path);
             $comment->save();
+
+            $comment->post()->increment('comment_count');
+        });
+
+        self::deleted(function (Comment $comment): void {
+            // Decrementa contador no Post
+            $comment->post()->decrement('comment_count');
         });
     }
+
     protected function casts(): array
     {
         return [];

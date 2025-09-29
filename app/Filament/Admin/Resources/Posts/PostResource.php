@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\Posts\Pages\CreatePost;
 use App\Filament\Admin\Resources\Posts\Pages\EditPost;
 use App\Filament\Admin\Resources\Posts\Pages\ListPosts;
 use App\Filament\Admin\Resources\Posts\Pages\ViewPost;
+use App\Filament\Admin\Resources\Posts\RelationManagers\CommentsRelationManager;
 use App\Filament\Admin\Resources\Posts\Schemas\PostForm;
 use App\Filament\Admin\Resources\Posts\Schemas\PostInfolist;
 use App\Filament\Admin\Resources\Posts\Tables\PostsTable;
@@ -42,7 +43,7 @@ final class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CommentsRelationManager::class,
         ];
     }
 

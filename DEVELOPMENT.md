@@ -157,6 +157,8 @@ Desenvolvi factories para os models User, Subreddit e Post para permitir a semea
 
 A "mágica" do depth e path (que foi a abordagem que usei) acontece automaticamente quando um comentário for criado. A lógica foi usada diretamente no model
 
+A partir da abordagem dos comentários, utilizei o relation manager do filament para mostrar os comentários em cada post, fazendo a tabela de criação por usuário, então no model também coloquei o incremento da contagem da comentários em cada post.
+
 ## Funcionalidades Avançadas
 
 1.  Sistema de Karma

@@ -35,22 +35,6 @@ final class PostForm
                 Select::make('subreddit_id')
                     ->relationship('subreddit', 'name')
                     ->required(),
-                TextInput::make('upvotes')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                TextInput::make('downvotes')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                TextInput::make('score')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                TextInput::make('comment_count')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
                 Toggle::make('is_pinned')
                     ->required(),
                 Toggle::make('is_locked')

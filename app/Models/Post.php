@@ -23,10 +23,6 @@ final class Post extends Model
         'image_path',
         'user_id',
         'subreddit_id',
-        'upvotes',
-        'downvotes',
-        'score',
-        'comment_count',
         'is_pinned',
         'is_locked',
     ];

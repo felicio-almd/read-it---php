@@ -21,8 +21,6 @@ final class PostFactory extends Factory
      */
     public function definition(): array
     {
-        $upvotes = fake()->numberBetween(0, 5000);
-        $downvotes = fake()->numberBetween(0, 1000);
 
         return [
             'title' => fake()->sentence(6),
@@ -30,10 +28,10 @@ final class PostFactory extends Factory
             'content_type' => 'text',
             'user_id' => User::factory(),
             'subreddit_id' => Subreddit::factory(),
-            'upvotes' => $upvotes,
-            'downvotes' => $downvotes,
-            'score' => $upvotes - $downvotes,
-            'comment_count' => fake()->numberBetween(0, 200),
+            'upvotes' => 0,
+            'downvotes' => 0,
+            'score' => 0,
+            'comment_count' => 0,
             'is_pinned' => false,
             'is_locked' => false,
         ];
