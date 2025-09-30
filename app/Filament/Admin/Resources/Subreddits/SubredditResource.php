@@ -8,6 +8,8 @@ use App\Filament\Admin\Resources\Subreddits\Pages\CreateSubreddit;
 use App\Filament\Admin\Resources\Subreddits\Pages\EditSubreddit;
 use App\Filament\Admin\Resources\Subreddits\Pages\ListSubreddits;
 use App\Filament\Admin\Resources\Subreddits\Pages\ViewSubreddit;
+use App\Filament\Admin\Resources\Subreddits\RelationManagers\MembersRelationManager;
+use App\Filament\Admin\Resources\Subreddits\RelationManagers\PostsRelationManager;
 use App\Filament\Admin\Resources\Subreddits\Schemas\SubredditForm;
 use App\Filament\Admin\Resources\Subreddits\Schemas\SubredditInfolist;
 use App\Filament\Admin\Resources\Subreddits\Tables\SubredditsTable;
@@ -23,8 +25,6 @@ final class SubredditResource extends Resource
     protected static ?string $model = Subreddit::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHashtag;
-
-    // protected static ?string $recordTitleAttribute = 'Subreddit';
 
     public static function form(Schema $schema): Schema
     {
@@ -44,7 +44,8 @@ final class SubredditResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PostsRelationManager::class,
+            MembersRelationManager::class,
         ];
     }
 

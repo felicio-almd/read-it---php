@@ -32,14 +32,6 @@ final class SubredditForm
                 FileUpload::make('icon_image')
                     ->image()
                     ->directory('icon_images'),
-                TextInput::make('member_count')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                TextInput::make('post_count')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
                 Select::make('created_by')
                     ->relationship('creator', 'name')
                     ->required(),

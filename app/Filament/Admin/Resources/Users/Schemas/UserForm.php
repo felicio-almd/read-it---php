@@ -29,10 +29,6 @@ final class UserForm
                     ->directory('user_avatars'),
                 Textarea::make('bio')
                     ->columnSpanFull(),
-                TextInput::make('karma')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
                 Select::make('role')
                     ->options(UserRole::class)
                     ->required(),
