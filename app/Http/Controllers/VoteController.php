@@ -62,12 +62,9 @@ final class VoteController extends Controller
             ->where('user_id', $user->id)
             ->first();
 
-        // Se já votou no mesmo tipo, remove o voto; senão, registra o voto
-        $newVote = $currentVote?->vote_type === $voteType ? null : $voteType;
+        $this->voteAction->execute($votable, $user, $voteType);
 
-        $this->voteAction->execute($votable, $user, $newVote);
-
-        $message = $this->getVoteMessage($newVote, $voteType);
+        $message = $this->getVoteMessage($currentVote?->vote_type, $voteType);
 
         return redirect()->back()->with('success', $message);
     }
@@ -75,12 +72,15 @@ final class VoteController extends Controller
     /**
      * Retorna mensagem apropriada baseada na ação
      */
-    private function getVoteMessage(?string $newVote, string $voteType): string
+    private function getVoteMessage(?string $previousVote, string $clickedVoteType): string
     {
-        if ($newVote === null) {
+        if ($previousVote === $clickedVoteType) {
             return 'Voto removido com sucesso';
         }
 
-        return $voteType === 'up' ? 'Like registrado!' : 'Deslike registrado!';
+        // Caso contrário, foi registrado ou alterado
+        return $clickedVoteType === 'up'
+            ? 'Like registrado!'
+            : 'Deslike registrado!';
     }
 }

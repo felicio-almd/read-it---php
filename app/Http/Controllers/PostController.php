@@ -40,12 +40,10 @@ final class PostController extends Controller
      */
     public function show(string $id): View|Factory
     {
-        // Verifica se o post existe e carrega relações
         $post = Post::with(['user', 'subreddit', 'comments.user'])
             ->where('id', $id)
             ->firstOrFail();
 
-        // Se não tiver subreddit, usa um fallback
         if (! $post->subreddit) {
             $post->subreddit = (object) ['name' => 'subreddit-deletado'];
         }

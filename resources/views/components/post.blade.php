@@ -43,9 +43,6 @@ declare(strict_types=1);
                     <div class="prose mt-4 max-w-none text-gray-700">
                         {!! nl2br(e($post->content)) !!}
                     </div>
-
-                    <form action="{{ route('post.vote.like') }}" method="post"></form>
-                    <form action="{{ route('post.vote.deslike') }}" method="post"></form>
                 </div>
             </article>
 
@@ -93,13 +90,116 @@ declare(strict_types=1);
 
                         {{-- Botão de Responder --}}
                         @auth
-                            <div class="mt-2">
+                            <div class="mt-2 flex">
                                 <button
                                     @click="openReply = !openReply"
                                     class="text-xs font-bold text-gray-500 hover:text-indigo-600"
                                 >
                                     Responder
                                 </button>
+                                <div
+                                    class="mt-6 flex items-center space-x-4 border-t border-gray-200 pt-4 text-sm font-bold text-gray-500"
+                                >
+                                    <div class="flex items-center space-x-2">
+                                        @php
+                                            $userVote = $comment->getCurrentUserVote();
+                                        @endphp
+
+                                        {{-- Botão de Upvote --}}
+                                        @auth
+                                            <form action="{{ route('comment.like', $comment->id) }}" method="POST">
+                                                @csrf
+                                                <button
+                                                    type="submit"
+                                                    class="{{ $userVote === 'up' ? 'bg-orange-100 text-orange-600' : 'hover:bg-gray-100' }} flex items-center rounded-md p-2 transition-colors"
+                                                    title="{{ $userVote === 'up' ? 'Remover upvote' : 'Dar upvote' }}"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M10 3a1 1 0 01.707.293l5 5a1 1 0 01-1.414 1.414L11 6.414V16a1 1 0 11-2 0V6.414L5.707 9.707a1 1 0 01-1.414-1.414l5-5A1 1 0 0110 3z"
+                                                            clip-rule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <button
+                                                onclick="alert('Você precisa estar logado para votar')"
+                                                class="flex items-center rounded-md p-2 transition-colors hover:bg-gray-100"
+                                                title="Faça login para votar"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-5 w-5"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 3a1 1 0 01.707.293l5 5a1 1 0 01-1.414 1.414L11 6.414V16a1 1 0 11-2 0V6.414L5.707 9.707a1 1 0 01-1.414-1.414l5-5A1 1 0 0110 3z"
+                                                        clip-rule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        @endauth
+
+                                        {{-- Contador de votos --}}
+                                        <span
+                                            class="{{ $comment->score > 0 ? 'text-orange-600' : ($comment->score < 0 ? 'text-indigo-600' : 'text-gray-600') }} min-w-[3rem] text-center font-bold"
+                                        >
+                                            {{ $comment->score }}
+                                        </span>
+
+                                        {{-- Botão de Downvote --}}
+                                        @auth
+                                            <form action="{{ route('comment.deslike', $comment->id) }}" method="POST">
+                                                @csrf
+                                                <button
+                                                    type="submit"
+                                                    class="{{ $userVote === 'down' ? 'bg-indigo-100 text-indigo-600' : 'hover:bg-gray-100' }} flex items-center rounded-md p-2 transition-colors"
+                                                    title="{{ $userVote === 'down' ? 'Remover downvote' : 'Dar downvote' }}"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M10 17a1 1 0 00.707-.293l5-5a1 1 0 00-1.414-1.414L11 13.586V4a1 1 0 10-2 0v9.586L5.707 10.293a1 1 0 00-1.414 1.414l5 5A1 1 0 0010 17z"
+                                                            clip-rule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <button
+                                                class="flex items-center rounded-md p-2 transition-colors hover:bg-gray-100"
+                                                title="Faça login para votar"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-5 w-5"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 17a1 1 0 00.707-.293l5-5a1 1 0 00-1.414-1.414L11 13.586V4a1 1 0 10-2 0v9.586L5.707 10.293a1 1 0 00-1.414 1.414l5 5A1 1 0 0010 17z"
+                                                        clip-rule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        @endauth
+                                    </div>
+                                </div>
                             </div>
                         @endauth
 
