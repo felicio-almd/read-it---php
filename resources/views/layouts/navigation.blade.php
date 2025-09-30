@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 ?>
+
 <nav x-data="{ open: false }" class="border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
     <!-- Primary Navigation Menu -->
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -10,16 +11,9 @@ declare(strict_types=1);
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex shrink-0 items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="#">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
                 </div>
             </div>
 
@@ -28,7 +22,7 @@ declare(strict_types=1);
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
+                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm leading-4 font-medium text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
                         >
                             <div>{{ Auth::user()->name }}</div>
 
@@ -100,14 +94,10 @@ declare(strict_types=1);
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="space-y-1 pb-3 pt-2">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+        <div class="space-y-1 pt-2 pb-3"></div>
 
         <!-- Responsive Settings Options -->
-        <div class="border-t border-gray-200 pb-1 pt-4 dark:border-gray-600">
+        <div class="border-t border-gray-200 pt-4 pb-1 dark:border-gray-600">
             <div class="px-4">
                 <div class="text-base font-medium text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="text-sm font-medium text-gray-500">{{ Auth::user()->email }}</div>
@@ -134,4 +124,5 @@ declare(strict_types=1);
         </div>
     </div>
 </nav>
-<?php 
+
+<?php

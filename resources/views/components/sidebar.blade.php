@@ -26,28 +26,30 @@ declare(strict_types=1);
                 Comunidades Populares
             @endauth
         </h3>
-        <ul class="flex flex-col gap-5">
+        <ul class="flex flex-col gap-3">
             @forelse ($subreddits as $subreddit)
-                <li class="flex items-center space-x-3 rounded-md p-2 hover:bg-gray-100">
+                <a
+                    href="{{ route('subreddits.show', $subreddit->slug) }}"
+                    @class([
+                        'active: flex items-center space-x-3 rounded-lg p-2 hover:bg-violet-200 focus:bg-violet-100',
+                        'bg-violet-200' =>
+                            request()->routeIs('subreddits.show') && request()->route('subreddit')->slug === $subreddit->slug,
+                    ])
+                >
                     <img
-                        src="{{ $subreddit->icon_image ?? 'https://api.dicebear.com/8.x/bottts/svg?seed=' . $subreddit->slug }}"
+                        src="{{ asset('storage/' . $subreddit->icon_image) ?? 'https://api.dicebear.com/8.x/bottts/svg?seed=' . $subreddit->slug }}"
                         alt="Icone"
-                        class="h- w-5 rounded-full bg-gray-200"
+                        class="h-6 w-6 rounded-full bg-gray-200"
                     />
                     <div class="flex w-full justify-between p-2">
-                        <a
-                            href="{{ route('subreddits.show', $subreddit->slug) }}"
-                            class="text-sm font-bold hover:underline"
-                        >
-                            r/{{ $subreddit->name }}
-                        </a>
+                        <h2 class="text-sm font-bold">r/{{ $subreddit->name }}</h2>
                         <p
                             class="w-1/4 rounded-xl border border-violet-400 bg-violet-300 text-center text-xs font-bold text-black max-xl:hidden"
                         >
                             {{ $subreddit->member_count }}
                         </p>
                     </div>
-                </li>
+                </a>
             @empty
                 <li class="text-sm text-gray-500">Nenhuma comunidade encontrada.</li>
             @endforelse
@@ -63,7 +65,6 @@ declare(strict_types=1);
         </a>
     @endauth
 
-    <!-- Footer -->
     <div class="rounded-lg bg-white p-4 text-xs text-gray-500 shadow">
         <p>read-it Inc. © {{ date('Y') }}. All rights reserved.</p>
     </div>

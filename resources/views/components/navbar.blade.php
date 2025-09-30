@@ -15,8 +15,8 @@ declare(strict_types=1);
                 </div>
 
                 <div class="flex h-10 items-center justify-center gap-4 space-x-4">
-                    <div class="m-0 flex flex-1 items-center justify-center">
-                        <div class="w-full max-w-lg">
+                    <div class="m-0 flex flex-1 items-center justify-center max-md:justify-end">
+                        <div class="w-full max-w-lg max-md:w-2/3">
                             <form action="{{ route('search') }}" method="GET" class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                                     <x-lucide-search class="h-5 w-5 text-gray-400" />
@@ -24,7 +24,7 @@ declare(strict_types=1);
                                 <input
                                     type="text"
                                     name="query"
-                                    placeholder="Pesquisar comunidades e posts..."
+                                    placeholder="Pesquisar..."
                                     class="w-full rounded-md border-gray-300 bg-gray-100 py-2 pr-4 pl-10 text-sm focus:border-indigo-500 focus:ring-indigo-500"
                                     value="{{ request('query') }}"
                                 />
@@ -32,7 +32,7 @@ declare(strict_types=1);
                         </div>
                     </div>
 
-                    <div class="m-0 flex h-full items-center max-md:hidden">
+                    <div class="m-0 flex h-full items-center">
                         <x-theme-toggle />
                     </div>
 
