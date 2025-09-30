@@ -7,21 +7,26 @@ namespace App\View\Components;
 use App\Models\Subreddit;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Component;
 
 final class Sidebar extends Component
 {
-    public Collection $topSubreddits;
+    public Collection $subreddits;
 
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
-        $this->topSubreddits = Subreddit::query()
-            ->orderBy('member_count', 'desc')
-            ->take(5)
-            ->get();
+        if (Auth::check()) {
+            $this->subreddits = Auth::user()->subreddits()->get();
+        } else {
+            $this->subreddits = Subreddit::query()
+                ->orderBy('member_count', 'desc')
+                ->take(5)
+                ->get();
+        }
     }
 
     /**

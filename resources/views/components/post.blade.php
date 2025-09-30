@@ -5,10 +5,10 @@ declare(strict_types=1);
 ?>
 
 <x-layouts.auth>
-    <div class="flex w-full gap-10 px-4 py-10 sm:px-6 lg:px-8">
-        <x-sidebar />
+    <div class="mx-auto w-full">
+        <x-navbar />
 
-        <div class="flex-grow space-y-8">
+        <div class="h-full space-y-8 p-8">
             {{-- Card Principal do Post --}}
             <article class="overflow-hidden rounded-lg bg-white shadow-md">
                 <div class="p-6 sm:p-8">
