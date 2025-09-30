@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Subreddit;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -22,17 +23,46 @@ final class PostController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): void
+    public function create(): View
     {
-        //
+        // Busca todos os subreddits dos quais o usuário autenticado é membro
+        // para popular o <select> no formulário.
+        $subreddits = auth()->user()->subreddits()->get();
+
+        // Retorna a view do formulário, passando a lista de subreddits.
+        return view('components.post_create', [
+            'subreddits' => $subreddits,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): void
+    public function store(Request $request)
     {
-        //
+        // Valida os dados recebidos do formulário.
+        $validated = $request->validate([
+            'subreddit_id' => ['required', 'exists:subreddits,id'],
+            'title' => ['required', 'string', 'max:300'],
+            'content' => ['required', 'string'],
+            'content_type' => ['required'],
+            'url' => ['required'],
+            'image_path' => ['required'],
+        ]);
+
+        $subreddit = Subreddit::query()->findOrFail($validated['subreddit_id']);
+
+        // Cria o post associado ao subreddit e ao usuário logado.
+        // O slug será gerado automaticamente pelo model event.
+        $post = $subreddit->posts()->create([
+            'user_id' => $request->user()->id,
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'content_type' => 'text', // Define um tipo padrão
+        ]);
+
+        // Redireciona o usuário para a página do post recém-criado com uma mensagem de sucesso.
+        return to_route('posts.show', $post)->with('success', 'Post criado com sucesso!');
     }
 
     /**

@@ -15,13 +15,13 @@ declare(strict_types=1);
             @auth
                 <!-- Botões para usuários logados -->
                 <a
-                    href="#"
+                    href="{{ route('posts.create') }}"
                     class="mb-2 block w-full rounded-full bg-indigo-600 px-4 py-2 text-center font-bold text-white hover:bg-indigo-700"
                 >
                     Criar Post
                 </a>
                 <a
-                    href="#"
+                    href="{{ route('subreddits.create') }}"
                     class="block w-full rounded-full bg-gray-200 px-4 py-2 text-center font-bold text-gray-800 hover:bg-gray-300"
                 >
                     Criar Comunidade

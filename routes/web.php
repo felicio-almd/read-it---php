@@ -21,7 +21,9 @@ Route::middleware('auth')->group(function (): void {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // posts
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::get('/posts/{id}', [PostController::class, 'show'])->name('post.show');
+    Route::post('/posts/', [PostController::class, 'store'])->name('posts.store');
     Route::post('/posts/{post}/comments', [PostController::class, 'addComment'])->name('post.comments.add');
 
     Route::post('/posts/{post}/upvote', [VoteController::class, 'postUpvote'])->name('post.like');
@@ -29,6 +31,8 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/comments/{comment}/upvote', [VoteController::class, 'commentUpvote'])->name('comment.like');
     Route::post('/comments/{comment}/downvote', [VoteController::class, 'commentDownvote'])->name('comment.deslike');
 
+    Route::get('/subreddits/create', [SubredditController::class, 'create'])->name('subreddits.create');
+    Route::post('/r/', [SubredditController::class, 'store'])->name('subreddits.store');
     Route::get('/r/{subreddit:slug}', [SubredditController::class, 'show'])->name('subreddits.show');
     Route::post('/r/{subreddit:slug}/join', [SubredditController::class, 'join'])->name('subreddits.join');
     Route::post('/r/{subreddit:slug}/leave', [SubredditController::class, 'leave'])->name('subreddits.leave');
