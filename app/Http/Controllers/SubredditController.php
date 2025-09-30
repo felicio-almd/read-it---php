@@ -17,31 +17,46 @@ final class SubredditController extends Controller
 {
     public function create(): View
     {
-        return view('components.subreddit_create');
+        return view('components.subreddit-create');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:21', 'unique:subreddits', 'alpha_dash'],
+            'slug' => ['required', 'string', 'max:50', 'unique:subreddits,slug', 'alpha_dash'],
             'description' => ['required', 'string', 'max:500'],
+            'rules' => ['nullable', 'string', 'max:1000'],
+            'banner_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
+            'icon_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:1024'],
         ]);
 
         $user = $request->user();
 
-        $subreddit = DB::transaction(function () use ($user, $validated) {
+        $subreddit = DB::transaction(function () use ($user, $validated, $request) {
             $subreddit = $user->createdSubreddits()->create([
                 'name' => $validated['name'],
-                'slug' => Str::slug($validated['name']),
+                'slug' => Str::slug($validated['slug']),
                 'description' => $validated['description'],
+                'rules' => $validated['rules'] ?? null,
             ]);
+
+            // Upload das imagens (armazenando em storage/app/public/subreddits)
+            if ($request->hasFile('banner_image')) {
+                $path = $request->file('banner_image')->store('subreddits/banners', 'public');
+                $subreddit->update(['banner_image' => $path]);
+            }
+
+            if ($request->hasFile('icon_image')) {
+                $path = $request->file('icon_image')->store('subreddits/icons', 'public');
+                $subreddit->update(['icon_image' => $path]);
+            }
 
             $this->join($subreddit, app(JoinSubredditAction::class));
 
             return $subreddit;
         });
 
-        // Redireciona para a página da nova comunidade
         return to_route('subreddits.show', $subreddit)->with('success', 'Comunidade criada com sucesso!');
     }
 

@@ -5,14 +5,14 @@ declare(strict_types=1);
 ?>
 
 <x-layouts.auth>
+    <x-navbar />
     <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
         <div class="rounded-lg bg-white p-6 shadow">
             <h1 class="mb-6 text-2xl font-bold text-gray-900">Criar Novo Post</h1>
 
-            <form action="{{ route('posts.store') }}" method="POST">
+            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="space-y-6">
-                    {{-- Comunidade --}}
                     <div>
                         <input type="hidden" name="subreddit_id" value="{{ $subreddit->id }}" />
                         <p class="mb-1 block text-sm font-medium text-gray-700">Comunidade</p>
@@ -24,7 +24,6 @@ declare(strict_types=1);
                         @enderror
                     </div>
 
-                    {{-- Título --}}
                     <div>
                         <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
                         <input
@@ -39,7 +38,6 @@ declare(strict_types=1);
                         @enderror
                     </div>
 
-                    {{-- Conteúdo --}}
                     <div>
                         <label for="content" class="block text-sm font-medium text-gray-700">Conteúdo</label>
                         <textarea
@@ -51,6 +49,14 @@ declare(strict_types=1);
                         {{ old('content') }}</textarea
                         >
                         @error('content')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-gray-700">Imagem (opcional)</label>
+                        <input type="file" name="image" id="image" class="mt-1 block w-full text-sm text-gray-500" />
+                        @error('image')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

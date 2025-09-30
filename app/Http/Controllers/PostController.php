@@ -26,7 +26,7 @@ final class PostController extends Controller
      */
     public function create(Subreddit $subreddit): View
     {
-        return view('components.post_create', [
+        return view('components.post-create', [
             'subreddit' => $subreddit,
         ]);
     }
@@ -40,16 +40,24 @@ final class PostController extends Controller
             'subreddit_id' => ['required', 'exists:subreddits,id'],
             'title' => ['required', 'string', 'max:300'],
             'content' => ['required', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
         ]);
 
         $subreddit = Subreddit::query()->findOrFail($validated['subreddit_id']);
 
-        $post = $subreddit->posts()->create([
+        $postData = [
             'user_id' => $request->user()->id,
             'title' => $validated['title'],
             'content' => $validated['content'],
-            'content_type' => 'text',
-        ]);
+            'content_type' => $request->hasFile('image') ? 'image' : 'text',
+        ];
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('posts', 'public');
+            $postData['image_path'] = $path;
+        }
+
+        $post = $subreddit->posts()->create($postData);
 
         return to_route('post.show', $post)->with('success', 'Post criado com sucesso!');
     }
