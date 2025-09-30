@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Post;
-use App\Models\Subreddit;
-use App\Models\User;
-
 final class PostPolicy
 {
     /**
@@ -15,7 +11,7 @@ final class PostPolicy
      */
     public function viewAny(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,31 +19,31 @@ final class PostPolicy
      */
     public function view(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Subreddit $subreddit): bool
+    public function create(): bool
     {
-        return $subreddit->isMember($user);
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Post $post, Subreddit $subreddit): bool
+    public function update(): bool
     {
-        return $user->id === $post->user_id || $subreddit->isModerator($user);
+        return true;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Post $post, Subreddit $subreddit): bool
+    public function delete(): bool
     {
-        return $this->update($user, $post, $subreddit);
+        return true;
     }
 
     /**
@@ -55,7 +51,7 @@ final class PostPolicy
      */
     public function restore(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -63,6 +59,6 @@ final class PostPolicy
      */
     public function forceDelete(): bool
     {
-        return false;
+        return true;
     }
 }

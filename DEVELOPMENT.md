@@ -167,6 +167,12 @@ Para ter likes e deslikes nos posts e nos comentários, implementei um sistema d
 
 ### Entrar em comunidades
 
+Para a funcionalidade de membresia, utilizei a arquitetura de Actions (JoinSubredditAction, LeaveSubredditAction) para isolar a lógica de negócio do SubredditController. A implementação cria e remove registros diretamente no model Membership, ao mesmo tempo que atualiza o contador de membros do subreddit.
+
+Na interface, a página da comunidade exibe botões dinâmicos de "Entrar/Sair" com base no método isMemberOf() do model User. Essa mesma verificação é utilizada autorizar a criação de posts, garantindo que apenas membros possam postar
+
+Para policies eu tentei criar as policies e utiliza-las para autorizar criação/edição/delete no front, mas preferi usar essa verificação de autorização via controller na chamada da função. As policies funcionariam para o template do filament, no admin, mas como restringi o acesso para apenas quem tem a role == admin, só um admin geral conseguiria ter acesso ao painel adm, então ele pode fazer tudo.
+
 ## Funcionalidades Avançadas
 
 1.  Sistema de Karma
