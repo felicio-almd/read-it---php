@@ -34,7 +34,7 @@ declare(strict_types=1);
                         alt="Icone"
                         class="h- w-5 rounded-full bg-gray-200"
                     />
-                    <div class="flex w-full justify-between">
+                    <div class="flex w-full justify-between p-2">
                         <a
                             href="{{ route('subreddits.show', $subreddit->slug) }}"
                             class="text-sm font-bold hover:underline"
@@ -53,6 +53,15 @@ declare(strict_types=1);
             @endforelse
         </ul>
     </div>
+    @auth
+        <a
+            href="{{ route('subreddits.create') }}"
+            class="mt-4 flex items-center gap-2 rounded-xl border border-gray-300 bg-gray-200 p-4 text-sm font-bold hover:cursor-pointer"
+        >
+            Criar Comunidade
+            <x-lucide-plus class="h-4 w-4" />
+        </a>
+    @endauth
 
     <!-- Footer -->
     <div class="rounded-lg bg-white p-4 text-xs text-gray-500 shadow">

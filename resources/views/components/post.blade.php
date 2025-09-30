@@ -86,6 +86,7 @@ declare(strict_types=1);
                             <span class="mx-1">•</span>
                             <span>{{ $comment->created_at->diffForHumans() }}</span>
                         </p>
+
                         <p class="mt-2 text-gray-800">{{ $comment->content }}</p>
 
                         {{-- Botão de Responder --}}

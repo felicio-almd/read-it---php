@@ -23,26 +23,20 @@ final class SubredditController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            // Regra 'alpha_dash' permite apenas letras, números, traços e underscores.
             'name' => ['required', 'string', 'max:21', 'unique:subreddits', 'alpha_dash'],
             'description' => ['required', 'string', 'max:500'],
         ]);
 
         $user = $request->user();
 
-        // Usa uma transação para garantir que ambas as operações (criar subreddit e adicionar membro)
-        // aconteçam com sucesso ou falhem juntas.
         $subreddit = DB::transaction(function () use ($user, $validated) {
-            // Cria o subreddit
             $subreddit = $user->createdSubreddits()->create([
                 'name' => $validated['name'],
-                'slug' => Str::slug($validated['name']), // Gera o slug a partir do nome
+                'slug' => Str::slug($validated['name']),
                 'description' => $validated['description'],
             ]);
 
-            // Adiciona o criador como o primeiro membro e o define como moderador.
-            $subreddit->members()->attach($user->id, ['role' => 'moderator']);
-            $subreddit->increment('member_count');
+            $this->join($subreddit, app(JoinSubredditAction::class));
 
             return $subreddit;
         });
@@ -62,6 +56,16 @@ final class SubredditController extends Controller
             'subreddit' => $subreddit,
             'posts' => $posts,
         ]);
+    }
+
+    public function destroy(Subreddit $subreddit)
+    {
+        // só o criador pode excluir
+        abort_if($subreddit->created_by !== auth()->id(), 403, 'Você não tem permissão para excluir esta comunidade.');
+
+        $subreddit->delete();
+
+        return to_route('home')->with('success', 'Comunidade excluída com sucesso!');
     }
 
     public function join(Subreddit $subreddit, JoinSubredditAction $joinAction)

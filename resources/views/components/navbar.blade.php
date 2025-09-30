@@ -15,25 +15,20 @@ declare(strict_types=1);
                 </div>
 
                 <div class="flex h-10 items-center justify-center gap-4 space-x-4">
-                    <div
-                        x-data="{ open: false }"
-                        class="relative m-0 flex h-full items-center rounded px-2 transition-colors duration-200 max-md:hidden"
-                    >
-                        <button @click="open = !open" class="m-0 rounded-full text-center hover:cursor-pointer">
-                            <x-lucide-search class="h-5 w-5 text-gray-600" />
-                        </button>
-
-                        {{-- Caixa de pesquisa --}}
-                        <div
-                            x-show="open"
-                            @click.away="open = false"
-                            class="absolute right-0 mt-2 w-64 rounded-lg bg-white p-2 shadow-lg dark:bg-gray-800"
-                        >
-                            <input
-                                type="text"
-                                placeholder="Pesquisar..."
-                                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                            />
+                    <div class="m-0 flex flex-1 items-center justify-center">
+                        <div class="w-full max-w-lg">
+                            <form action="{{ route('search') }}" method="GET" class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <x-lucide-search class="h-5 w-5 text-gray-400" />
+                                </span>
+                                <input
+                                    type="text"
+                                    name="query"
+                                    placeholder="Pesquisar comunidades e posts..."
+                                    class="w-full rounded-md border-gray-300 bg-gray-100 py-2 pr-4 pl-10 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    value="{{ request('query') }}"
+                                />
+                            </form>
                         </div>
                     </div>
 

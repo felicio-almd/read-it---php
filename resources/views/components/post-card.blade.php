@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 ?>
+
 @props([
     'post',
 ])
@@ -10,25 +11,27 @@ declare(strict_types=1);
 <article {{ $attributes->merge(['class' => 'bg-white rounded-lg shadow-md overflow-hidden']) }}>
     <div class="p-4 sm:p-6">
         {{-- Cabeçalho: Autor, Comunidade e Tempo --}}
-        <div class="flex items-center space-x-3 text-xs text-gray-500">
-            <img
-                src="{{ $post->subreddit->icon_image ?? 'https://api.dicebear.com/8.x/bottts/svg?seed=' . $post->subreddit->slug }}"
-                alt="Ícone do Subreddit"
-                class="h-6 w-6 rounded-full bg-gray-200"
-            />
-            <div>
-                <a
-                    href="{{ route('subreddits.show', $post->subreddit) }}"
-                    class="font-bold text-gray-800 hover:underline"
-                >
-                    r/{{ $post->subreddit->name }}
-                </a>
-                <span class="mx-1">•</span>
-                <span>
-                    Postado por
-                    <a href="#" class="hover:underline">u/{{ $post->user->username }}</a>
-                </span>
-                <span>{{ $post->created_at->diffForHumans() }}</span>
+        <div class="flex justify-between">
+            <div class="flex items-center space-x-3 text-xs text-gray-500">
+                <img
+                    src="{{ $post->subreddit->icon_image ?? 'https://api.dicebear.com/8.x/bottts/svg?seed=' . $post->subreddit->slug }}"
+                    alt="Ícone do Subreddit"
+                    class="h-6 w-6 rounded-full bg-gray-200"
+                />
+                <div>
+                    <a
+                        href="{{ route('subreddits.show', $post->subreddit) }}"
+                        class="font-bold text-gray-800 hover:underline"
+                    >
+                        r/{{ $post->subreddit->name }}
+                    </a>
+                    <span class="mx-1">•</span>
+                    <span>
+                        Postado por
+                        <a href="#" class="hover:underline">u/{{ $post->user->username }}</a>
+                    </span>
+                    <span>{{ $post->created_at->diffForHumans() }}</span>
+                </div>
             </div>
         </div>
 
@@ -102,4 +105,5 @@ declare(strict_types=1);
         </div>
     </div>
 </article>
-<?php 
+
+<?php

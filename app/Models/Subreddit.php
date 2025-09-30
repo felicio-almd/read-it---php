@@ -90,15 +90,4 @@ final class Subreddit extends Model
     {
         return $this->isModerator($user);
     }
-
-    // Ao criar um subreddit, adicionar o criador como moderador
-    protected static function booted(): void
-    {
-        self::created(function ($subreddit): void {
-            $subreddit->memberships()->create([
-                'user_id' => $subreddit->user_id,
-                'role' => 'moderator',
-            ]);
-        });
-    }
 }

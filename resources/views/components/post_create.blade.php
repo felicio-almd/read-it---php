@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 ?>
+
 <x-layouts.auth>
     <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
         <div class="rounded-lg bg-white p-6 shadow">
@@ -11,18 +12,13 @@ declare(strict_types=1);
             <form action="{{ route('posts.store') }}" method="POST">
                 @csrf
                 <div class="space-y-6">
-                    {{-- Selecionar Comunidade --}}
+                    {{-- Comunidade --}}
                     <div>
-                        <label for="subreddit_id" class="block text-sm font-medium text-gray-700">Comunidade</label>
-                        <select
-                            id="subreddit_id"
-                            name="subreddit_id"
-                            class="mt-1 block w-full rounded-md border-gray-300 py-2 pr-10 pl-3 text-base focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none sm:text-sm"
-                        >
-                            @foreach ($subreddits as $subreddit)
-                                <option value="{{ $subreddit->id }}">{{ $subreddit->name }}</option>
-                            @endforeach
-                        </select>
+                        <input type="hidden" name="subreddit_id" value="{{ $subreddit->id }}" />
+                        <p class="mb-1 block text-sm font-medium text-gray-700">Comunidade</p>
+                        <p class="rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-800">
+                            r/{{ $subreddit->name }}
+                        </p>
                         @error('subreddit_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -52,7 +48,7 @@ declare(strict_types=1);
                             rows="8"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"
                         >
-{{ old('content') }}</textarea
+                        {{ old('content') }}</textarea
                         >
                         @error('content')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -72,4 +68,5 @@ declare(strict_types=1);
         </div>
     </div>
 </x-layouts.auth>
-<?php 
+
+<?php
