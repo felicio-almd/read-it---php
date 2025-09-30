@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +36,6 @@ final class ConfirmablePasswordController extends Controller
 
         $request->session()->put('auth.password_confirmed_at', Carbon::now()->getTimestamp());
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('home', absolute: false));
     }
 }

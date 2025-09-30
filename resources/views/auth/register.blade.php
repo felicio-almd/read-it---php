@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 ?>
+
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -21,6 +22,21 @@ declare(strict_types=1);
                 autocomplete="name"
             />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="username" :value="__('Username')" />
+            <x-text-input
+                id="username"
+                class="mt-1 block w-full"
+                type="text"
+                name="username"
+                :value="old('username')"
+                required
+                autofocus
+                autocomplete="username"
+            />
+            <x-input-error :messages="$errors->get('username')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
@@ -72,7 +88,7 @@ declare(strict_types=1);
 
         <div class="mt-4 flex items-center justify-end">
             <a
-                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 href="{{ route('login') }}"
             >
                 {{ __('Already registered?') }}
@@ -84,4 +100,5 @@ declare(strict_types=1);
         </div>
     </form>
 </x-guest-layout>
-<?php 
+
+<?php
