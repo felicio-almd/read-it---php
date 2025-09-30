@@ -16,6 +16,7 @@ final class Subreddit extends Model
 {
     use HasFactory;
     use HasUuids;
+
     protected $fillable = [
         'name',
         'slug',
@@ -31,6 +32,7 @@ final class Subreddit extends Model
 
     /**
      * O usuário que criou o subreddit.
+     *
      * @return BelongsTo<User, $this>
      */
     public function creator(): BelongsTo
@@ -40,6 +42,7 @@ final class Subreddit extends Model
 
     /**
      * Todos os posts que pertencem a este subreddit.
+     *
      * @return HasMany<Post, $this>
      */
     public function posts(): HasMany
@@ -48,7 +51,6 @@ final class Subreddit extends Model
     }
 
     /**
-     * Os usuarios que são membros deste subreddit.
      * @return BelongsToMany<User, $this, Pivot>
      */
     public function members(): BelongsToMany
@@ -56,5 +58,47 @@ final class Subreddit extends Model
         return $this->belongsToMany(User::class, 'memberships')
             ->withPivot('role')
             ->withTimestamps();
+    }
+
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    public function isMember(User $user): bool
+    {
+        return $this->memberships()
+            ->where('user_id', $user->id)
+            ->exists();
+    }
+
+    public function isModerator(User $user): bool
+    {
+        return $this->memberships()
+            ->where('user_id', $user->id)
+            ->where('role', 'moderator')
+            ->exists();
+    }
+
+    public function canPost(User $user): bool
+    {
+        // Qualquer usuário autenticado pode postar
+        return $this->isMember($user);
+    }
+
+    public function canModerate(User $user): bool
+    {
+        return $this->isModerator($user);
+    }
+
+    // Ao criar um subreddit, adicionar o criador como moderador
+    protected static function booted(): void
+    {
+        self::created(function ($subreddit): void {
+            $subreddit->memberships()->create([
+                'user_id' => $subreddit->user_id,
+                'role' => 'moderator',
+            ]);
+        });
     }
 }

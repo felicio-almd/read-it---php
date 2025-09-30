@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 ?>
+
 <aside class="w-80 flex-shrink-0">
     <div class="sticky top-20 space-y-4">
         <div class="rounded-lg bg-white p-4 shadow">
@@ -40,7 +41,12 @@ declare(strict_types=1);
                             class="h-8 w-8 rounded-full bg-gray-200"
                         />
                         <div>
-                            <a href="#" class="text-sm font-bold hover:underline">r/{{ $subreddit->name }}</a>
+                            <a
+                                href="{{ route('subreddits.show', $subreddit->slug) }}"
+                                class="text-sm font-bold hover:underline"
+                            >
+                                r/{{ $subreddit->name }}
+                            </a>
                             <p class="text-xs text-gray-500">{{ $subreddit->member_count }} membros</p>
                         </div>
                     </li>
@@ -63,4 +69,5 @@ declare(strict_types=1);
         </div>
     </div>
 </aside>
-<?php 
+
+<?php

@@ -13,8 +13,16 @@ final class Membership extends Model
 {
     use HasFactory;
     use HasUuids;
+
+    protected $fillable = [
+        'user_id',
+        'subreddit_id',
+        'role',
+    ];
+
     /**
      * O usuário associado a esta membresia.
+     *
      * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
@@ -24,6 +32,7 @@ final class Membership extends Model
 
     /**
      * O subreddit associado a esta membresia.
+     *
      * @return BelongsTo<Subreddit, $this>
      */
     public function subreddit(): BelongsTo

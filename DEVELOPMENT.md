@@ -165,6 +165,8 @@ Para trabalhar com o aninhamento de comentários, usei uma função simples no c
 
 Para ter likes e deslikes nos posts e nos comentários, implementei um sistema de votos criando o model Vote com relacionamento polimórfico para suportar Post e Comment. Usei a trait Votable com o morphMany para centralizar a lógica e adicionei métodos vote(), upvote() que chamei de like e downvote() que chamei de deslike.
 
+### Entrar em comunidades
+
 ## Funcionalidades Avançadas
 
 1.  Sistema de Karma
