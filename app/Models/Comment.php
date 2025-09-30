@@ -105,11 +105,6 @@ final class Comment extends Model
             ->value('vote_type');
     }
 
-    protected function getScoreAttribute(): int
-    {
-        return $this->upvotes()->count() - $this->downvotes()->count();
-    }
-
     // Threading
     protected static function booted(): void
     {
@@ -145,5 +140,10 @@ final class Comment extends Model
             // Decrementa contador no Post
             $comment->post()->decrement('comment_count');
         });
+    }
+
+    protected function getScoreAttribute(): int
+    {
+        return $this->upvotes()->count() - $this->downvotes()->count();
     }
 }
