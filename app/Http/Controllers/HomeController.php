@@ -52,9 +52,9 @@ final class HomeController extends Controller
                     ->get();
 
                 $totalStats = [
-                    'members' => Subreddit::query()->whereIn('id', $followedSubredditIds)->sum('member_count'),
-                    'posts' => Post::query()->whereIn('subreddit_id', $followedSubredditIds)->count(),
-                    'comments' => Post::query()->whereIn('subreddit_id', $followedSubredditIds)->sum('comment_count'),
+                    'members' => (int) Subreddit::query()->whereIn('id', $followedSubredditIds)->sum('member_count'),
+                    'posts' => (int) Post::query()->whereIn('subreddit_id', $followedSubredditIds)->count(),
+                    'comments' => (int) Post::query()->whereIn('subreddit_id', $followedSubredditIds)->sum('comment_count'),
                 ];
             }
 
