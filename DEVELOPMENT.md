@@ -95,19 +95,12 @@ Optei pela tabela membership como pivo para ter acesso fácil aos membros e os s
 5.1 Estrutura de Camadas
 
 ```ini
-┌─────────────────┐
-│ Frontend        │ ← Blade Templates + Tailwind CSS
-├─────────────────┤
-│ Controllers     │ ← Laravel Controllers
-├─────────────────┤
-│ Services        │ ← Business Logic Layer
-├─────────────────┤
-│ Repositories    │ ← Data Access Layer
-├─────────────────┤
-│ Models          │ ← Eloquent ORM Models
-├─────────────────┤
-│ Database        │ ← SQLite/PostgreSQL
-└─────────────────┘
+│ Frontend - Blade Templates + Tailwind CSS
+│ Controllers  - Laravel Controllers
+│ Services  - Business Logic Layer
+│ Repositories - Data Access Layer
+│ Models - Eloquent ORM Models
+│ Database - PostgreSQL
 ```
 
 ## Segunda Fase - Desenvolvimento
@@ -121,7 +114,7 @@ Configuração do ambiente
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_DATABASE=nome_do_projeto_db
+DB_DATABASE=read_it_db
 DB_USERNAME=meu_usuario
 DB_PASSWORD=
 ```
@@ -169,20 +162,34 @@ Para ter likes e deslikes nos posts e nos comentários, implementei um sistema d
 
 Para a funcionalidade de membresia, utilizei a arquitetura de Actions (JoinSubredditAction, LeaveSubredditAction) para isolar a lógica de negócio do SubredditController. A implementação cria e remove registros diretamente no model Membership, ao mesmo tempo que atualiza o contador de membros do subreddit.
 
-Na interface, a página da comunidade exibe botões dinâmicos de "Entrar/Sair" com base no método isMemberOf() do model User. Essa mesma verificação é utilizada autorizar a criação de posts, garantindo que apenas membros possam postar
+Na interface, a página da comunidade exibe botões dinâmicos de "Entrar/Sair" com base no método do model User. Essa mesma verificação é utilizada autorizar a criação de posts, garantindo que apenas membros possam postar
 
 Para policies eu tentei criar as policies e utiliza-las para autorizar criação/edição/delete no front, mas preferi usar essa verificação de autorização via controller na chamada da função. As policies funcionariam para o template do filament, no admin, mas como restringi o acesso para apenas quem tem a role == admin, só um admin geral conseguiria ter acesso ao painel adm, então ele pode fazer tudo.
 
-## Funcionalidades Avançadas
+### Frontend
 
-1.  Sistema de Karma
-2.  Moderação
-3.  Notificações
+Para o frontend, a ideia foi criar uma interface limpa e direto ao ponto, usando Laravel Blade e Tailwind CSS.
+
+Aproveitei ao máximo o sistema de componentes do Blade. Criei peças reutilizáveis como a navbar, os cards de post e os painéis de feed, o que deixou o código bem mais organizado e fácil de dar manutenção.
+
+Página Inicial,s e você não está logado, vê os posts mais populares. Mas, ao fazer login, a página te recebe pelo nome e mostra um feed só com o conteúdo e as estatísticas das comunidades que você segue.
+
+O botão para entrar ou sair de uma comunidade é dinâmico.
+
+Em vez de deixar o usuário clicar em algo para depois dar um erro de permissão, eu simplesmente escondo os botões. Por exemplo, o botão para criar um post só aparece se você for membro daquela comunidade.
+
+Integrei o frontend com os controller respectivos fazendo as regras de negócio básicas para cada situação desejada.
+
+IA: Como eu preparei componentes na mão e páginas do zero, assim como fiz a troca de tema na mão, para economizar tempo pedir a IA gerar estilos da página de autenticação e as classes para o modo escuro, pois eu já estava com prazo apertado.
+
+No geral, organizei tudo em um layout de feed, que é fácil de usar, com alguns cards no topo para mostrar as estatísticas de uma forma legal, todas as telas são responsivas. Se a pessoa quiser, tambem tem uma barra de pesquisa que busca por posts e comunidades.
 
 ## Performance
 
 1. Otimização de Query
 
-## Testes
-
 ## CI/CD
+
+Deployment realizado. Aplicação em produção.
+
+Link: (READ IT)[https://lightgray-wolf-916438.hostingersite.com/]
