@@ -20,6 +20,9 @@ final class Vote extends Model
         'vote_type',
     ];
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function votable(): MorphTo
     {
         return $this->morphTo();

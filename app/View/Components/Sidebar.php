@@ -12,6 +12,9 @@ use Illuminate\View\Component;
 
 final class Sidebar extends Component
 {
+    /**
+     * @var Collection<int, Subreddit>
+     */
     public Collection $subreddits;
 
     /**

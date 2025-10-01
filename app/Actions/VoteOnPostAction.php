@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Models\Comment;
+use App\Models\Post;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 
 final class VoteOnPostAction
 {
-    public function execute(Model $votable, User $user, string $voteType): void
+    public function execute(Post|Comment $votable, User $user, string $voteType): void
     {
-
         $existingVote = $votable->votes()
             ->where('user_id', $user->id)
             ->first();
@@ -30,8 +30,6 @@ final class VoteOnPostAction
         }
 
         // Se o model (Post/Comment) tiver o método da Trait, recalcula os scores
-        if (method_exists($votable, 'recalculateVotes')) {
-            $votable->recalculateVotes();
-        }
+        $votable->recalculateVotes();
     }
 }

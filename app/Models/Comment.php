@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\Votable;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Collection;
 
 final class Comment extends Model
 {
-    use HasFactory;
     use HasUuids;
     use Votable;
 
@@ -69,25 +67,18 @@ final class Comment extends Model
     }
 
     /**
-     * Retorna todos os "ancestrais" (pais, avós, etc.) de um comentário.
-     *
-     * @return Collection
+     * @return Collection<int, static>
      */
-    public function getAncestors()
+    public function getAncestors(): Collection
     {
-        // Pega o caminho (ex: "id1.id2.id3") e transforma em um array de IDs
         $parentIds = explode('.', (string) $this->path);
 
-        // Remove o ID do próprio comentário do final do array
         array_pop($parentIds);
 
-        // Se não houver IDs de pais, retorna uma coleção vazia
         if ($parentIds === []) {
             return collect();
         }
 
-        // Busca todos os comentários cujos IDs estão na lista de pais
-        // e os ordena pela profundidade (depth) para manter a hierarquia
         return self::query()
             ->whereIn('id', $parentIds)
             ->orderBy('depth')
@@ -108,36 +99,28 @@ final class Comment extends Model
     // Threading
     protected static function booted(): void
     {
-        // Evento que dispara ANTES de um novo comentário ser salvo
-        self::creating(function (Comment $comment): void {
+        // função para lógica de threading do comentarios
+        self::creating(static function (Comment $comment): void {
             if ($comment->parent_id) {
-                // Se for uma resposta, busca o pai
                 $parent = Comment::query()->find($comment->parent_id);
                 if ($parent) {
-                    // A profundidade é a do pai + 1
                     $comment->depth = $parent->depth + 1;
-                    // O caminho é o do pai, um ponto, e o ID do novo comentário
-                    // Usamos um placeholder {ID} que será substituído depois
                     $comment->path = $parent->path.'.'.'{ID}';
                 }
             } else {
-                // Se for um comentário de nível raiz, a profundidade é 0
                 $comment->depth = 0;
                 $comment->path = '{ID}';
             }
         });
 
-        // Evento que dispara DEPOIS que o comentário foi salvo e já tem um ID
-        self::created(function (Comment $comment): void {
-            // Substitui o placeholder {ID} pelo ID real que acabou de ser gerado
-            $comment->path = str_replace('{ID}', $comment->id, $comment->path);
+        self::created(static function (Comment $comment): void {
+            $comment->path = str_replace('{ID}', (string) $comment->id, $comment->path);
             $comment->save();
 
             $comment->post()->increment('comment_count');
         });
 
-        self::deleted(function (Comment $comment): void {
-            // Decrementa contador no Post
+        self::deleted(static function (Comment $comment): void {
             $comment->post()->decrement('comment_count');
         });
     }

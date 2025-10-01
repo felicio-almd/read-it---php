@@ -17,11 +17,17 @@ trait Votable
         return $this->morphMany(Vote::class, 'votable');
     }
 
+    /**
+     * @return MorphMany<Vote, $this>
+     */
     public function upvotes(): MorphMany
     {
         return $this->votes()->where('vote_type', 'up');
     }
 
+    /**
+     * @return MorphMany<Vote, $this>
+     */
     public function downvotes(): MorphMany
     {
         return $this->votes()->where('vote_type', 'down');

@@ -9,7 +9,10 @@ use App\Models\Post;
 use App\Models\Subreddit;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use stdClass;
 
 final class PostController extends Controller
 {
@@ -34,7 +37,7 @@ final class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'subreddit_id' => ['required', 'exists:subreddits,id'],
@@ -65,14 +68,16 @@ final class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): View|Factory
+    public function show(string $id): View|Factory|Application
     {
         $post = Post::with(['user', 'subreddit', 'comments.user'])
             ->where('id', $id)
             ->firstOrFail();
 
         if (! $post->subreddit) {
-            $post->subreddit = (object) ['name' => 'subreddit-deletado'];
+            $deletedSubreddit = new stdClass();
+            $deletedSubreddit->name = 'subreddit-deletado';
+            $post->setRelation('subreddit', $deletedSubreddit);
         }
 
         return view('components.post', ['post' => $post]);
@@ -81,7 +86,7 @@ final class PostController extends Controller
     /**
      * Armazena um novo comentário no banco de dados.
      */
-    public function addComment(Request $request, Post $post)
+    public function addComment(Request $request, Post $post): RedirectResponse
     {
         $validated = $request->validate([
             'content' => ['required', 'string', 'max:5000'],

@@ -9,6 +9,7 @@ use App\Actions\LeaveSubredditAction;
 use App\Models\Subreddit;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -20,7 +21,10 @@ final class SubredditController extends Controller
         return view('components.subreddit-create');
     }
 
-    public function store(Request $request)
+    /**
+     * Salva uma nova comunidade.
+     */
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:21', 'unique:subreddits', 'alpha_dash'],
@@ -73,7 +77,7 @@ final class SubredditController extends Controller
         ]);
     }
 
-    public function destroy(Subreddit $subreddit)
+    public function destroy(Subreddit $subreddit): RedirectResponse
     {
         // só o criador pode excluir
         abort_if($subreddit->created_by !== auth()->id(), 403, 'Você não tem permissão para excluir esta comunidade.');
@@ -83,14 +87,14 @@ final class SubredditController extends Controller
         return to_route('home')->with('success', 'Comunidade excluída com sucesso!');
     }
 
-    public function join(Subreddit $subreddit, JoinSubredditAction $joinAction)
+    public function join(Subreddit $subreddit, JoinSubredditAction $joinAction): RedirectResponse
     {
         $joinAction->execute($subreddit, auth()->user());
 
         return back()->with('success', 'Você agora é membro da comunidade r/'.$subreddit->name);
     }
 
-    public function leave(Subreddit $subreddit, LeaveSubredditAction $leaveAction)
+    public function leave(Subreddit $subreddit, LeaveSubredditAction $leaveAction): RedirectResponse
     {
         $leaveAction->execute($subreddit, auth()->user());
 

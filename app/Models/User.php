@@ -56,7 +56,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === UserRole::Admin;
+        return $this->role === UserRole::Admin->value;
     }
 
     public function getFilamentAvatarUrl(): ?string
@@ -74,13 +74,6 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         return $this->hasMany(Post::class);
     }
 
-    //    public function comments (): HasMany {
-    //        return $this->hasMany(Comment::class);
-    //    }
-    //    public function votes(): HasMany
-    //    {
-    //        return $this->hasMany(Vote::class);
-    //    }
     /**
      * @return HasMany<Subreddit, $this>
      */

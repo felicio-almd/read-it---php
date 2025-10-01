@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\Votable;
+use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 final class Post extends Model
 {
+    /** @use HasFactory<PostFactory> */
     use HasFactory;
+
     use HasUuids;
     use Votable;
 
@@ -32,11 +35,6 @@ final class Post extends Model
         'is_pinned',
         'is_locked',
     ];
-
-    //    public function getRouteKeyName(): string
-    //    {
-    //        return 'slug';
-    //    }
 
     /**
      * @return BelongsTo<User, $this>

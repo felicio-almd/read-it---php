@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\SubredditFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 final class Subreddit extends Model
 {
+    /** @use HasFactory<SubredditFactory> */
     use HasFactory;
+
     use HasUuids;
 
     protected $fillable = [
@@ -60,7 +63,10 @@ final class Subreddit extends Model
             ->withTimestamps();
     }
 
-    public function memberships()
+    /**
+     * @return HasMany<Membership, $this>
+     */
+    public function memberships(): HasMany
     {
         return $this->hasMany(Membership::class);
     }
