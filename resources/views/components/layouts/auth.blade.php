@@ -5,7 +5,7 @@ declare(strict_types=1);
 ?>
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-100">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-screen bg-gray-100">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,7 +29,7 @@ declare(strict_types=1);
             }
         </script>
     </head>
-    <body class="min-h-full">
+    <body class="min-h-full dark:bg-black">
         <!-- Top Nav -->
         <div class="flex min-h-screen">
             <x-sidebar />

@@ -6,12 +6,12 @@ declare(strict_types=1);
 
 <x-guest-layout>
     <div
-        class="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 px-4 py-12 sm:px-6 lg:px-8"
+        class="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 px-4 py-12 sm:px-6 lg:px-8 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"
     >
         <div class="w-full max-w-md">
             <div class="mb-8 text-center">
                 <div
-                    class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 shadow-lg"
+                    class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 shadow-lg dark:from-indigo-600 dark:to-purple-600"
                 >
                     <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
@@ -22,22 +22,24 @@ declare(strict_types=1);
                         />
                     </svg>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900">Bem-vindo de volta!</h2>
-                <p class="mt-2 text-sm text-gray-600">Entre para continuar no READ IT</p>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Bem-vindo de volta!</h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-slate-400">Entre para continuar no READ IT</p>
             </div>
 
-            <div class="rounded-2xl bg-white p-8 shadow-xl">
+            <div class="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-900 dark:shadow-slate-950/50">
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">
                     @csrf
 
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-900">Email</label>
+                        <label for="email" class="block text-sm font-semibold text-gray-900 dark:text-white">
+                            Email
+                        </label>
                         <div class="relative mt-2">
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <svg
-                                    class="h-5 w-5 text-gray-400"
+                                    class="h-5 w-5 text-gray-400 dark:text-slate-500"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -58,7 +60,7 @@ declare(strict_types=1);
                                 required
                                 autofocus
                                 autocomplete="username"
-                                class="block w-full rounded-xl border-gray-300 py-3 pr-3 pl-10 text-gray-900 placeholder-gray-400 focus:border-violet-500 focus:ring-violet-500 sm:text-sm"
+                                class="block w-full rounded-xl border-gray-300 py-3 pr-3 pl-10 text-gray-900 placeholder-gray-400 transition-colors focus:border-violet-500 focus:ring-violet-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-500"
                                 placeholder="seu@email.com"
                             />
                         </div>
@@ -66,11 +68,13 @@ declare(strict_types=1);
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-gray-900">Senha</label>
+                        <label for="password" class="block text-sm font-semibold text-gray-900 dark:text-white">
+                            Senha
+                        </label>
                         <div class="relative mt-2">
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <svg
-                                    class="h-5 w-5 text-gray-400"
+                                    class="h-5 w-5 text-gray-400 dark:text-slate-500"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -89,16 +93,36 @@ declare(strict_types=1);
                                 name="password"
                                 required
                                 autocomplete="current-password"
-                                class="block w-full rounded-xl border-gray-300 py-3 pr-3 pl-10 text-gray-900 placeholder-gray-400 focus:border-violet-500 focus:ring-violet-500 sm:text-sm"
+                                class="block w-full rounded-xl border-gray-300 py-3 pr-3 pl-10 text-gray-900 placeholder-gray-400 transition-colors focus:border-violet-500 focus:ring-violet-500 sm:text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-500"
                                 placeholder="••••••••"
                             />
                         </div>
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
 
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                class="h-4 w-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500 dark:border-slate-600 dark:bg-slate-800 dark:text-indigo-600 dark:focus:ring-indigo-500"
+                            />
+                            <span class="ml-2 text-sm text-gray-600 dark:text-slate-400">Lembrar de mim</span>
+                        </label>
+
+                        @if (Route::has('password.request'))
+                            <a
+                                href="{{ route('password.request') }}"
+                                class="text-sm font-semibold text-violet-600 hover:text-violet-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                            >
+                                Esqueceu a senha?
+                            </a>
+                        @endif
+                    </div>
+
                     <button
                         type="submit"
-                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-violet-700 hover:to-purple-700 focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:outline-none"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-violet-700 hover:to-purple-700 focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:outline-none dark:from-indigo-600 dark:to-purple-600 dark:hover:from-indigo-700 dark:hover:to-purple-700 dark:focus:ring-indigo-500 dark:focus:ring-offset-slate-900"
                     >
                         <span>Entrar</span>
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,11 +136,11 @@ declare(strict_types=1);
                     </button>
 
                     <div class="text-center">
-                        <p class="text-sm text-gray-600">
+                        <p class="text-sm text-gray-600 dark:text-slate-400">
                             Não tem uma conta?
                             <a
                                 href="{{ route('register') }}"
-                                class="font-semibold text-violet-600 hover:text-violet-700"
+                                class="font-semibold text-violet-600 hover:text-violet-700 dark:text-indigo-400 dark:hover:text-indigo-300"
                             >
                                 Criar conta
                             </a>
@@ -126,11 +150,11 @@ declare(strict_types=1);
             </div>
 
             <div class="mt-6 text-center">
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-gray-500 dark:text-slate-500">
                     Ao entrar, você concorda com nossos
-                    <a href="#" class="text-violet-600 hover:underline">Termos de Serviço</a>
+                    <a href="#" class="text-violet-600 hover:underline dark:text-indigo-400">Termos de Serviço</a>
                     e
-                    <a href="#" class="text-violet-600 hover:underline">Política de Privacidade</a>
+                    <a href="#" class="text-violet-600 hover:underline dark:text-indigo-400">Política de Privacidade</a>
                 </p>
             </div>
         </div>

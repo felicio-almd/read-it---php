@@ -29,11 +29,11 @@ declare(strict_types=1);
             }
         </script>
     </head>
-    <body class="min-h-full">
+    <body class="min-h-full dark:bg-black">
         <!-- Top Nav -->
-        <div class="flex min-h-screen">
+        <div class="flex min-h-screen dark:bg-black">
             <x-sidebar />
-            <main class="flex-1">
+            <main class="flex-1 dark:bg-black">
                 {{ $slot }}
             </main>
         </div>
