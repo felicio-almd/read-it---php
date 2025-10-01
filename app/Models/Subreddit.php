@@ -1,0 +1,99 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Database\Factories\SubredditFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+
+final class Subreddit extends Model
+{
+    /** @use HasFactory<SubredditFactory> */
+    use HasFactory;
+
+    use HasUuids;
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'rules',
+        'banner_image',
+        'icon_image',
+        'member_count',
+        'post_count',
+        'created_by',
+        'is_active',
+    ];
+
+    /**
+     * O usuário que criou o subreddit.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Todos os posts que pertencem a este subreddit.
+     *
+     * @return HasMany<Post, $this>
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * @return BelongsToMany<User, $this, Pivot>
+     */
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'memberships')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<Membership, $this>
+     */
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    public function isMember(User $user): bool
+    {
+        return $this->memberships()
+            ->where('user_id', $user->id)
+            ->exists();
+    }
+
+    public function isModerator(User $user): bool
+    {
+        return $this->memberships()
+            ->where('user_id', $user->id)
+            ->where('role', 'moderator')
+            ->exists();
+    }
+
+    public function canPost(User $user): bool
+    {
+        // Qualquer usuário autenticado pode postar
+        return $this->isMember($user);
+    }
+
+    public function canModerate(User $user): bool
+    {
+        return $this->isModerator($user);
+    }
+}

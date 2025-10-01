@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Comment;
+use App\Models\Post;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -36,6 +39,10 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureVite();
         $this->configureUrl();
         $this->configureHttp();
+        Relation::morphMap([
+            'post' => Post::class,
+            'comment' => Comment::class,
+        ]);
     }
 
     /**

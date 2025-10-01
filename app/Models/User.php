@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
@@ -19,6 +24,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
     /** @use HasFactory<UserFactory> */
     use HasFactory;
 
+    use HasUuids;
     use InteractsWithMedia;
     use Notifiable;
 
@@ -31,6 +37,11 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         'name',
         'email',
         'password',
+        'username',
+        'avatar',
+        'bio',
+        'karma',
+        'role',
     ];
 
     /**
@@ -45,7 +56,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->role === UserRole::Admin->value;
     }
 
     public function getFilamentAvatarUrl(): ?string
@@ -53,6 +64,42 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         $avatar = $this->getFirstMedia('profile-pictures');
 
         return $avatar?->getUrl();
+    }
+
+    /**
+     * @return HasMany<Post, $this>
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * @return HasMany<Subreddit, $this>
+     */
+    public function createdSubreddits(): HasMany
+    {
+        return $this->hasMany(Subreddit::class, 'created_by');
+    }
+
+    /**
+     * Obtém os registros de inscrição (memberships) do usuario.
+     *
+     * @return HasMany<Membership, $this>
+     */
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    /**
+     * @return BelongsToMany<Subreddit, $this, Pivot>
+     */
+    public function subreddits(): BelongsToMany
+    {
+        return $this->belongsToMany(Subreddit::class, 'memberships')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     /**
@@ -65,6 +112,7 @@ final class User extends Authenticatable implements FilamentUser, HasAvatar, Has
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
         ];
     }
 }
